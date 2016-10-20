@@ -7,6 +7,7 @@ from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image
 
 class Tictactoe(AnchorLayout):
     pass
@@ -22,8 +23,9 @@ class Board(GridLayout):
     def checkPos(self,touch):
         for i in range (0, len(self.children)):
             if self.children[i].collide_point(touch.x, touch.y):
+                im = Image(source = 'tic-tac-toe-X.png')
+                self.children[i].add_widget(im)
                 print(i+1)
-    
 class Option(BoxLayout):
     pass
 
