@@ -8,6 +8,7 @@ from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, StringProperty
+from kivy.uix.image import Image
 
 class Tictactoe(AnchorLayout):
     pass
@@ -33,8 +34,16 @@ class Board(GridLayout):
     def checkPos(self,touch):
         for i in range (0, len(self.children)):
             if self.children[i].collide_point(touch.x, touch.y):
-                self.status_bar.turn +=1
                 print(i+1)
+                self.add(i)
+
+    def add(self, i):
+        if (self.status_bar.player == 'X'):
+            mark = Image(source='X.png')
+        else:
+            mark = Image(source='O.png')
+        self.children[i].add_widget(mark)
+        self.status_bar.turn +=1      
     
 class Option(BoxLayout):
     pass
