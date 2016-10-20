@@ -43,8 +43,8 @@ class Board(GridLayout):
         else:
             mark = Image(source='O.png')
         self.children[i].add_widget(mark)
-        self.status_bar.turn +=1      
-    
+        self.status_bar.turn +=1
+
 class Option(BoxLayout):
     pass
 
