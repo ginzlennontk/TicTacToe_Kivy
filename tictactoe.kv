@@ -1,0 +1,62 @@
+# File name: Tictactoe.kv
+#:kivy 1.9.0
+
+<Tictactoe>:
+	board:_board
+	AnchorLayout:
+		anchor_x: 'center'
+        anchor_y: 'top'
+		StatusBar:
+			id:_status_bar
+			orientation: 'horizontal'
+			size_hint: 1,.1
+			front_size: 50
+			Label:
+				text: 'X score'
+			Label:
+				text: self.parent.player + ' Turn'
+			Label:
+				text: 'O score'	
+
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'center'
+		RelativeLayout:
+			size_hint: .5,.5
+			canvas:
+				Line: 
+					points: 0, self.height/3, self.width, self.height/3
+				Line:
+					points: 0, self.height*2/3, self.width, self.height*2/3
+				Line:
+					points: self.width*2/3, 0, self.width*2/3, self.height
+				Line:
+					points: self.width/3, 0, self.width/3, self.height
+		Board:
+			id: _board
+			status_bar: _status_bar
+			size_hint: .5,.5
+			cols: 3
+			padding: 3
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+			RelativeLayout:
+				
+    AnchorLayout:
+        anchor_x: 'center'
+        anchor_y: 'bottom'
+        Option:
+			id: _option
+            orientation: 'horizontal'
+			size_hint: 1,.1
+			padding: 5
+            Button:
+				text: 'Restart'
+            Button:
+				text: 'Exit'
