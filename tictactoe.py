@@ -57,7 +57,22 @@ class Board(GridLayout):
         self.status_bar.turn +=1
 
 class Option(BoxLayout):
-    pass
+    def save(self, instance):
+        file = open("savedata.txt", "w")
+        data = ''
+        for mark in self.parent.parent.table:
+            data += mark
+        file.write(data)
+        file.close()
+        print("Save" + data)
+
+    def load(self, instance):
+        file = open("savedata.txt", "r")
+        data = file.readline()
+        for i in range (0, len(data)):
+            self.parent.parent.table[i] = data[i]
+        file.close()
+        print("Load" + str(self.parent.parent.table))
 
 class TictactoeApp(App):
     def build(self):

@@ -44,7 +44,7 @@
             tictactoe: root
 			size_hint: .5,.5
 			cols: 3
-			padding: 3
+			spacing: 10
 			RelativeLayout:
 			RelativeLayout:
 			RelativeLayout:
@@ -68,7 +68,9 @@
 				text: 'Restart'
 			Button:
 				text: 'Save'
+				on_press: self.parent.save(*args)
 			Button:
 				text: 'Load'
+				on_press: self.parent.load(*args)
             Button:
 				text: 'Exit'
