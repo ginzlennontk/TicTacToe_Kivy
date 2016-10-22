@@ -47,14 +47,25 @@ class Board(GridLayout):
                 self.add(i)
 
     def add(self, i):
-        if (self.status_bar.checkPlayer() == 'X'):
-            mark = Image(source='X.png')
-            self.tictactoe.table[i] = 'X'
-        else:
-            mark = Image(source='O.png')
-            self.tictactoe.table[i] = 'O'
-        self.children[i].add_widget(mark)
+        self.tictactoe.table[i] = self.status_bar.checkPlayer()
         self.status_bar.turn +=1
+        self.show_table()
+
+    def clear(self):
+        for child in self.children:
+            if(len(child.children) > 0):
+                child.remove_widget(child.children[0])
+
+    def show_table(self):
+        self.clear()
+        for i in range (len(self.tictactoe.table)):
+            if(self.tictactoe.table[i] == 'X'):
+                mark = Image(source='X.png')
+            elif(self.tictactoe.table[i] == 'O'):
+                mark = Image(source='O.png')
+            else:
+                mark = Image(source='Blank.png')
+            self.children[i].add_widget(mark)
 
 class Option(BoxLayout):
     def save(self, instance):
@@ -65,6 +76,7 @@ class Option(BoxLayout):
         file.write(data)
         file.close()
         print("Save" + data)
+        self.board.show_table()
 
     def load(self, instance):
         file = open("savedata.txt", "r")
@@ -73,6 +85,12 @@ class Option(BoxLayout):
             self.parent.parent.table[i] = data[i]
         file.close()
         print("Load" + str(self.parent.parent.table))
+        self.board.show_table()
+
+    def restart(self, instance, value):
+        self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        self.board.clear()
+        self.board.show_table()
 
 class TictactoeApp(App):
     def build(self):

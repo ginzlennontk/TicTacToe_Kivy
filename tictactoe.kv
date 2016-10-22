@@ -61,11 +61,14 @@
         Option:
 			id: _option
 			status_msg: _status_msg
+            tictactoe: root
+            board:_board
             orientation: 'horizontal'
 			size_hint: 1,.1
 			padding: 5
             Button:
 				text: 'Restart'
+                on_state: _option.restart(*args)
 			Button:
 				text: 'Save'
 				on_press: self.parent.save(*args)
