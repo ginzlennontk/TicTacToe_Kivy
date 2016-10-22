@@ -11,7 +11,15 @@ from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.image import Image
 
 class Tictactoe(AnchorLayout):
-    pass
+    table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+    
+    def tableError(self, i):
+    # Check if select point isn't empty
+        if(self.table[i] != ' '):
+            print('ซ้ำ!!')
+            return True
+        else:
+            return False
 
 class StatusBar(BoxLayout):
     turn = NumericProperty(1)
@@ -33,15 +41,18 @@ class Board(GridLayout):
 
     def checkPos(self,touch):
         for i in range (0, len(self.children)):
-            if self.children[i].collide_point(touch.x, touch.y):
+            if self.children[i].collide_point(touch.x, touch.y) and \
+            not self.tictactoe.tableError(i):
                 print(i+1)
                 self.add(i)
 
     def add(self, i):
         if (self.status_bar.player == 'X'):
             mark = Image(source='X.png')
+            self.tictactoe.table[i] = 'X'
         else:
             mark = Image(source='O.png')
+            self.tictactoe.table[i] = 'O'
         self.children[i].add_widget(mark)
         self.status_bar.turn +=1
 
