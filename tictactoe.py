@@ -47,17 +47,31 @@ class Board(GridLayout):
                 self.add(i)
 
     def add(self, i):
-        if (self.status_bar.player == 'X'):
-            mark = Image(source='X.png')
-            self.tictactoe.table[i] = 'X'
-        else:
-            mark = Image(source='O.png')
-            self.tictactoe.table[i] = 'O'
-        self.children[i].add_widget(mark)
+        self.tictactoe.table[i] = self.status_bar.player
         self.status_bar.turn +=1
+        self.show_table()
+
+    def clear(self):
+        for child in self.children:
+            if(len(child.children) > 0):
+                child.remove_widget(child.children[0])
+
+    def show_table(self):
+        self.clear()
+        for i in range (len(self.tictactoe.table)):
+            if(self.tictactoe.table[i] == 'X'):
+                mark = Image(source='X.png')
+            elif(self.tictactoe.table[i] == 'O'):
+                mark = Image(source='O.png')
+            else:
+                mark = Image(source='Blank.png')
+            self.children[i].add_widget(mark)
 
 class Option(BoxLayout):
-    pass
+    def restart(self, instance, value):
+        self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        self.board.clear()
+        self.board.show_table()
 
 class TictactoeApp(App):
     def build(self):
