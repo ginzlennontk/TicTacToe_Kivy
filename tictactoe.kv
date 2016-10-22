@@ -58,10 +58,13 @@
         anchor_y: 'bottom'
         Option:
 			id: _option
+            tictactoe: root
+            board:_board
             orientation: 'horizontal'
 			size_hint: 1,.1
 			padding: 5
             Button:
 				text: 'Restart'
+                on_state: _option.restart(*args)
             Button:
 				text: 'Exit'
