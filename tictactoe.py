@@ -23,10 +23,10 @@ class Tictactoe(AnchorLayout):
 
 class StatusBar(BoxLayout):
     turn = NumericProperty(1)
-    player = StringProperty('X')
     
     def on_turn(self, instance, value):
-        self.player = self.checkPlayer()
+        player = self.checkPlayer()
+        self.status_msg.text = player + ' Turn'
         
     def checkPlayer(self):
         if (self.turn%2 == 0):
@@ -47,7 +47,7 @@ class Board(GridLayout):
                 self.add(i)
 
     def add(self, i):
-        if (self.status_bar.player == 'X'):
+        if (self.status_bar.checkPlayer() == 'X'):
             mark = Image(source='X.png')
             self.tictactoe.table[i] = 'X'
         else:
