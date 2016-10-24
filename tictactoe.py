@@ -13,7 +13,7 @@ from kivy.graphics import Line, Color
 from kivy.graphics import *
 
 class Tictactoe(AnchorLayout):
-    table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+    table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']               # array for storage data
     
     def tableError(self, i):
     # Check if select point isn't empty
@@ -23,18 +23,58 @@ class Tictactoe(AnchorLayout):
         else:
             return False
 
+    def checkWin(self):
+        for x in range(3):
+            if(self.table[x] == self.table[x+3] == self.table[x+6] != " "):
+                self.board.show_where_win(x, x+6)
+                return True						# If true return current player win
+            
+            elif(self.table[3*x] == self.table[(3*x)+1] == self.table[(3*x)+2] != " "):
+                self.board.show_where_win(3*x, (3*x)+2)
+                return True						# If true return current player win
+            
+            elif(self.table[8] == self.table[4] == self.table[0] != " "):
+                self.board.show_where_win(0, 8)
+                return True						# If true return current player win
+            
+            elif(self.table[6] == self.table[4] == self.table[2] != " "):
+                self.board.show_where_win(2, 6)
+                return True						# If true return cuurent player win
+        else:								# If none of this is true
+            return False						# Return false nobody win keep playing or draw
+
+    def checkDraw(self):						# Check draw
+        #blank = 0
+        for x in range(9):
+            if self.table[x] == " ":		# If not then blank = 0
+                return False
+        #if blank == 0:					# When blank = 0 then it means draws
+        return True
+        #else:
+         #   return False
+
 class StatusBar(BoxLayout):
     turn = NumericProperty(1)
     
-    def on_turn(self, instance, value):
+    def on_turn(self, instance, value):                     #change current player 
         player = self.checkPlayer()
         self.status_msg.text = player + ' Turn'
         
-    def checkPlayer(self):
+    def checkPlayer(self):                                  #check currnet player
         if (self.turn%2 == 0):
             return 'O'
         else:
             return 'X'
+
+    '''def show_error(self):
+        self.status_msg.text = 'Duplicate!!!'''
+
+    def show_win(self):
+        player = self.checkPlayer()
+        self.status_msg.text = player + ' Win!'
+
+    def show_draw(self):
+        self.status_msg.text = 'DRAW'
 
 class Board(GridLayout):
     def on_touch_down(self, touch):
@@ -50,50 +90,23 @@ class Board(GridLayout):
 
     def add(self, i):
         self.tictactoe.table[i] = self.status_bar.checkPlayer()
-        self.check_win()
         self.show_table()
-        self.status_bar.turn +=1
+        if(self.tictactoe.checkWin()):
+            self.status_bar.show_win()		# Tell that O win
+        elif(self.tictactoe.checkDraw()):
+            self.status_bar.show_draw()
+        else:
+            self.status_bar.turn +=1
         
-    def check_win(self):
-        tb = self.tictactoe.table
-        for i in range (3):
-            if (tb[i*3] == tb[(i*3)+1] == tb[(i*3)+2] != ' '):
-                print(self.status_bar.checkPlayer())
-                with self.canvas:
-                    Color(1,1,0,1)
-                    self.line = Line(points = (self.children[i*3].center_x,
-                                               self.children[i*3].center_y,
-                                               self.children[i*3+2].center_x,
-                                               self.children[i*3+2].center_y),
-                                     width = 5, group = 'line')
-            elif (tb[i] == tb[i+3] == tb[i+6] != ' '):
-                print(self.status_bar.checkPlayer())
-                with self.canvas:
-                    Color(1,1,0,1)
-                    self.line = Line(points = (self.children[i].center_x,
-                                               self.children[i].center_y,
-                                               self.children[i+6].center_x,
-                                               self.children[i+6].center_y),
-                                     width = 5, group = 'line')
-        if (tb[0] == tb[4] == tb[8] != ' '):
-            print(self.status_bar.checkPlayer())
+    def show_where_win(self, x1, x2):
             with self.canvas:
                     Color(1,1,0,1)
-                    self.line = Line(points = (self.children[0].center_x,
-                                               self.children[0].center_y,
-                                               self.children[8].center_x,
-                                               self.children[8].center_y),
+                    self.line = Line(points = (self.children[x1].center_x,
+                                               self.children[x1].center_y,
+                                               self.children[x2].center_x,
+                                               self.children[x2].center_y),
                                      width = 5, group = 'line')
-        if (tb[2] == tb[4] == tb[6] != ' '):
-            print(self.status_bar.checkPlayer())
-            with self.canvas:
-                    Color(1,1,0,1)
-                    self.line = Line(points = (self.children[2].center_x,
-                                               self.children[2].center_y,
-                                               self.children[6].center_x,
-                                               self.children[6].center_y),
-                                     width = 5, group = 'line')
-    
+                    
     def clear(self):
         for child in self.children:
             if(len(child.children) > 0):
@@ -114,7 +127,7 @@ class Option(BoxLayout):
     def save(self, instance):
         file = open("savedata.txt", "w")
         data = ''
-        for mark in self.parent.parent.table:
+        for mark in self.tictactoe.table:
             data += mark
         file.write(data)
         file.close()
@@ -125,16 +138,20 @@ class Option(BoxLayout):
         self.board.canvas.remove_group('line')
         file = open("savedata.txt", "r")
         data = file.readline()
-        turn_counter = 0
+        turn_counter = 1
         for i in range (0, len(data)):
-            self.parent.parent.table[i] = data[i]
+            self.tictactoe.table[i] = data[i]
             if(data[i] != ' '):
                 turn_counter +=1
         file.close()
-        print("Load" + str(self.parent.parent.table))
+        print("Load" + str(self.tictactoe.table))
         self.board.show_table()
-        self.board.check_win()
-        self.status_bar.turn = turn_counter + 1
+        if(self.tictactoe.checkWin()):
+            self.status_bar.show_win()		# Tell that O or X win
+        elif(self.tictactoe.checkDraw()):
+            self.status_bar.show_draw()
+        else:
+            self.status_bar.turn = turn_counter
 
     def restart(self, instance, value):
         self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
