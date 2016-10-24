@@ -81,11 +81,16 @@ class Option(BoxLayout):
     def load(self, instance):
         file = open("savedata.txt", "r")
         data = file.readline()
+        turn_counter = 0
         for i in range (0, len(data)):
             self.parent.parent.table[i] = data[i]
+            if(data[i] != ' '):
+                turn_counter +=1
         file.close()
         print("Load" + str(self.parent.parent.table))
         self.board.show_table()
+        print(turn_counter)
+        self.status_bar.turn = turn_counter + 1
 
     def restart(self, instance, value):
         self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
