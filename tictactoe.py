@@ -9,6 +9,8 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import NumericProperty, StringProperty
 from kivy.uix.image import Image
+from kivy.graphics import Line, Color
+from kivy.graphics import *
 
 class Tictactoe(AnchorLayout):
     table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
@@ -48,9 +50,50 @@ class Board(GridLayout):
 
     def add(self, i):
         self.tictactoe.table[i] = self.status_bar.checkPlayer()
-        self.status_bar.turn +=1
+        self.check_win()
         self.show_table()
-
+        self.status_bar.turn +=1
+        
+    def check_win(self):
+        tb = self.tictactoe.table
+        for i in range (3):
+            if (tb[i*3] == tb[(i*3)+1] == tb[(i*3)+2] != ' '):
+                print(self.status_bar.checkPlayer())
+                with self.canvas:
+                    Color(1,1,0,1)
+                    self.line = Line(points = (self.children[i*3].center_x,
+                                               self.children[i*3].center_y,
+                                               self.children[i*3+2].center_x,
+                                               self.children[i*3+2].center_y),
+                                     width = 5, group = 'line')
+            elif (tb[i] == tb[i+3] == tb[i+6] != ' '):
+                print(self.status_bar.checkPlayer())
+                with self.canvas:
+                    Color(1,1,0,1)
+                    self.line = Line(points = (self.children[i].center_x,
+                                               self.children[i].center_y,
+                                               self.children[i+6].center_x,
+                                               self.children[i+6].center_y),
+                                     width = 5, group = 'line')
+        if (tb[0] == tb[4] == tb[8] != ' '):
+            print(self.status_bar.checkPlayer())
+            with self.canvas:
+                    Color(1,1,0,1)
+                    self.line = Line(points = (self.children[0].center_x,
+                                               self.children[0].center_y,
+                                               self.children[8].center_x,
+                                               self.children[8].center_y),
+                                     width = 5, group = 'line')
+        if (tb[2] == tb[4] == tb[6] != ' '):
+            print(self.status_bar.checkPlayer())
+            with self.canvas:
+                    Color(1,1,0,1)
+                    self.line = Line(points = (self.children[2].center_x,
+                                               self.children[2].center_y,
+                                               self.children[6].center_x,
+                                               self.children[6].center_y),
+                                     width = 5, group = 'line')
+    
     def clear(self):
         for child in self.children:
             if(len(child.children) > 0):
@@ -79,6 +122,7 @@ class Option(BoxLayout):
         self.board.show_table()
 
     def load(self, instance):
+        self.board.canvas.remove_group('line')
         file = open("savedata.txt", "r")
         data = file.readline()
         turn_counter = 0
@@ -89,12 +133,14 @@ class Option(BoxLayout):
         file.close()
         print("Load" + str(self.parent.parent.table))
         self.board.show_table()
-        print(turn_counter)
+        self.board.check_win()
         self.status_bar.turn = turn_counter + 1
 
     def restart(self, instance, value):
         self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
         self.board.clear()
+        self.board.canvas.remove_group('line')
+        self.status_bar.turn = 1
         self.board.show_table()
 
 class TictactoeApp(App):
