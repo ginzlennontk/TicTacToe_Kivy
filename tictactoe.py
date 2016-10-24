@@ -21,6 +21,32 @@ class Tictactoe(AnchorLayout):
         else:
             return False
 
+    def checkWin(self):
+        for x in range(3):
+            if(self.table[8-x] == self.table[5-x] == self.table[2-x] != " "):
+                return True						# If true return current player win
+            
+            elif(self.table[8-(3*x)] == self.table[7-(3*x)] == self.table[6-(3*x)] != " "):
+                return True						# If true return current player win
+            
+            elif(self.table[8] == self.table[4] == self.table[0] != " "):
+                return True						# If true return current player win
+            
+            elif(self.table[6] == self.table[4] == self.table[2] != " "):
+                return True						# If true return cuurent player win
+        else:								# If none of this is true
+            return False						# Return false nobody win keep playing or draw
+
+    def checkDraw(self):						# Check draw
+        #blank = 0
+        for x in range(9):
+            if self.table[x] == " ":		# If not then blank = 0
+                return False
+        #if blank == 0:					# When blank = 0 then it means draws
+        return True
+        #else:
+         #   return False
+
 class StatusBar(BoxLayout):
     turn = NumericProperty(1)
     
@@ -33,6 +59,16 @@ class StatusBar(BoxLayout):
             return 'O'
         else:
             return 'X'
+
+    '''def show_error(self):
+        self.status_msg.text = 'Duplicate!!!'''
+
+    def show_win(self):
+        player = self.checkPlayer()
+        self.status_msg.text = player + ' Win!'
+
+    def show_draw(self):
+        self.status_msg.text = 'DRAW'
 
 class Board(GridLayout):
     def on_touch_down(self, touch):
@@ -48,8 +84,14 @@ class Board(GridLayout):
 
     def add(self, i):
         self.tictactoe.table[i] = self.status_bar.checkPlayer()
-        self.status_bar.turn +=1
         self.show_table()
+        if(self.tictactoe.checkWin()):
+            self.status_bar.show_win()		# Tell that O win
+        elif(self.tictactoe.checkDraw()):
+            self.status_bar.show_draw()
+        else:
+            self.status_bar.turn +=1
+        
 
     def clear(self):
         for child in self.children:
@@ -71,7 +113,7 @@ class Option(BoxLayout):
     def save(self, instance):
         file = open("savedata.txt", "w")
         data = ''
-        for mark in self.parent.parent.table:
+        for mark in self.tictactoe.table:
             data += mark
         file.write(data)
         file.close()
@@ -82,9 +124,9 @@ class Option(BoxLayout):
         file = open("savedata.txt", "r")
         data = file.readline()
         for i in range (0, len(data)):
-            self.parent.parent.table[i] = data[i]
+            self.tictactoe.table[i] = data[i]
         file.close()
-        print("Load" + str(self.parent.parent.table))
+        print("Load" + str(self.tictactoe.table))
         self.board.show_table()
 
     def restart(self, instance, value):
