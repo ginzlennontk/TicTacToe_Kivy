@@ -71,7 +71,7 @@
 			padding: 5
             Button:
 				text: 'Restart'
-                on_state: _option.restart(*args)
+                on_state: self.parent.restart(*args)
 			Button:
 				text: 'Save'
 				on_press: self.parent.save(*args)

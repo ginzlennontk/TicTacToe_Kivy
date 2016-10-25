@@ -44,14 +44,10 @@ class Tictactoe(AnchorLayout):
             return False						# Return false nobody win keep playing or draw
 
     def checkDraw(self):						# Check draw
-        #blank = 0
         for x in range(9):
             if self.table[x] == " ":		# If not then blank = 0
                 return False
-        #if blank == 0:					# When blank = 0 then it means draws
         return True
-        #else:
-         #   return False
 
 class StatusBar(BoxLayout):
     turn = NumericProperty(1)
@@ -84,7 +80,7 @@ class Board(GridLayout):
     def checkPos(self,touch):
         for i in range (0, len(self.children)):
             if self.children[i].collide_point(touch.x, touch.y) and \
-            not self.tictactoe.tableError(i):
+            not self.tictactoe.tableError(i) and not self.tictactoe.checkWin():
                 print(i+1)
                 self.add(i)
 
@@ -138,11 +134,13 @@ class Option(BoxLayout):
         self.board.canvas.remove_group('line')
         file = open("savedata.txt", "r")
         data = file.readline()
-        turn_counter = 1
-        for i in range (0, len(data)):
-            self.tictactoe.table[i] = data[i]
-            if(data[i] != ' '):
-                turn_counter +=1
+        self.status_bar.turn = 0
+        for i in range (0, 9):
+            if(data[i] in ('X', 'O')):
+                self.tictactoe.table[i] = data[i]
+                self.status_bar.turn +=1
+            else:
+                self.tictactoe.table[i] = ' '
         file.close()
         print("Load" + str(self.tictactoe.table))
         self.board.show_table()
@@ -151,7 +149,7 @@ class Option(BoxLayout):
         elif(self.tictactoe.checkDraw()):
             self.status_bar.show_draw()
         else:
-            self.status_bar.turn = turn_counter
+            self.status_bar.turn += 1
 
     def restart(self, instance, value):
         self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
