@@ -2,6 +2,8 @@ import kivy
 kivy.require('1.9.0')
 from kivy import Config
 Config.set('graphics', 'multisamples', '0')
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
@@ -129,7 +131,20 @@ class Option(BoxLayout):
         file.close()
         print("Save" + data)
         self.board.show_table()
-
+        self.saved_message()
+        
+    def saved_message(self):
+        box = BoxLayout()
+        box.add_widget(Label(text='Your game has been saved.'))
+        popup = Popup(title='Message', content=box, size_hint=(None, None), size=(300, 300))
+        popup.open()
+    
+    def load_message(self):
+        box = BoxLayout()
+        box.add_widget(Label(text='Load Complete.'))
+        popup = Popup(title='Message', content=box, size_hint=(None, None), size=(300, 300))
+        popup.open()
+        
     def load(self, instance):
         self.board.canvas.remove_group('line')
         file = open("savedata.txt", "r")
@@ -144,6 +159,7 @@ class Option(BoxLayout):
         file.close()
         print("Load" + str(self.tictactoe.table))
         self.board.show_table()
+        self.load_message()
         if(self.tictactoe.checkWin()):
             self.status_bar.show_win()		# Tell that O or X win
         elif(self.tictactoe.checkDraw()):
