@@ -14,12 +14,31 @@
 			size_hint: 1,.1
 			front_size: 50
 			Label:
-				text: 'X score'
+			    text: 'X score'
+			    canvas.before:
+                    Color:
+                        rgba: .4, .6, 1, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+			    
 			Label:
 				id: _status_msg
 				text: 'X Turn'
+				canvas.before:
+                    Color:
+                        rgba: .4, 1, .2, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 			Label:
 				text: 'O score'	
+				canvas.before:
+                    Color:
+                        rgba: 1, 0, 0, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
     AnchorLayout:
         anchor_x: 'center'
