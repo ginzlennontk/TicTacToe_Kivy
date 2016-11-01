@@ -1,4 +1,5 @@
 import kivy
+from kivy.uix.relativelayout import RelativeLayout
 kivy.require('1.9.0')
 from kivy import Config
 Config.set('graphics', 'multisamples', '0')
@@ -9,7 +10,7 @@ from kivy.lang import Builder
 from kivy.uix.anchorlayout import AnchorLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.properties import NumericProperty, StringProperty
+from kivy.properties import NumericProperty, StringProperty, ObjectProperty
 from kivy.uix.image import Image
 from kivy.graphics import Line, Color
 from kivy.graphics import *
@@ -50,9 +51,14 @@ class Tictactoe(AnchorLayout):
             if self.table[x] == " ":		# If not then blank = 0
                 return False
         return True
+class Again(RelativeLayout):
+     Yes = ObjectProperty(None)
+     No = ObjectProperty(None)
 
 class StatusBar(BoxLayout):
     turn = NumericProperty(1)
+    countX = NumericProperty(0)
+    countO = NumericProperty(0)
     
     def on_turn(self, instance, value):                     #change current player 
         player = self.checkPlayer()
@@ -66,11 +72,32 @@ class StatusBar(BoxLayout):
 
     '''def show_error(self):
         self.status_msg.text = 'Duplicate!!!'''
-
+    def dismiss_popup(self):
+        self._popup.dismiss()
+   
     def show_win(self):
         player = self.checkPlayer()
         self.status_msg.text = player + ' Win!'
-
+        self.Again()
+    def Again(self):
+        content = Again(No=self.dismiss_popup,Yes=self.countScore)
+        self._popup = Popup(title='Play Again?', content=content, auto_dismiss=False, 
+                            size_hint=(None, None), size=(500,150))
+        self._popup.open()
+    def countScore(self):
+        player = self.checkPlayer()
+        self._popup.dismiss()
+        self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        self.board.clear()
+        self.board.canvas.remove_group('line')
+        self.turn = 1
+        self.board.show_table()
+        if player == 'X':
+            self.countX += 1
+        else:
+            self.countO += 1
+        
+        
     def show_draw(self):
         self.status_msg.text = 'DRAW'
 
@@ -173,6 +200,8 @@ class Option(BoxLayout):
         self.board.canvas.remove_group('line')
         self.status_bar.turn = 1
         self.board.show_table()
+        self.status_bar.countX = 0
+        self.status_bar.countO = 0
 
 class TictactoeApp(App):
     def build(self):
