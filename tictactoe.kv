@@ -10,11 +10,12 @@
 			id:_status_bar
 			board: _board
 			status_msg: _status_msg
+			tictactoe: root
 			orientation: 'horizontal'
 			size_hint: 1,.1
-			front_size: 50
+			front_size: 100
 			Label:
-			    text: 'X score'
+			    text: 'X score : ' + str(self.parent.countX) + ' Points'
 			    canvas.before:
                     Color:
                         rgba: .4, .6, 1, 1
@@ -32,7 +33,7 @@
                         pos: self.pos
                         size: self.size
 			Label:
-				text: 'O score'	
+				text: 'O score : ' + str(self.parent.countO) + ' Points'
 				canvas.before:
                     Color:
                         rgba: 1, 0, 0, 1
@@ -99,3 +100,19 @@
 				on_press: self.parent.load(*args)
             Button:
 				text: 'Exit'
+<Again>:
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text: 'If you want to play again the program will count score'   
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "40dp" 
+            Button:
+                text: "No"
+                on_press: root.No()
+            Button:
+                text: "Yes"
+                on_press: root.Yes()
+                
