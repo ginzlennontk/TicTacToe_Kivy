@@ -96,10 +96,21 @@ class StatusBar(BoxLayout):
             self.countX += 1
         else:
             self.countO += 1
-        
-        
+    def reDraw(self):
+        self._popup.dismiss()
+        self.tictactoe.table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+        self.board.clear()
+        self.board.canvas.remove_group('line')
+        self.turn = 1
+        self.board.show_table()
+    def DrawAgain(self):
+        content = Again(No=self.dismiss_popup,Yes=self.reDraw)
+        self._popup = Popup(title='Play Again?', content=content, auto_dismiss=False, 
+                            size_hint=(None, None), size=(500,150))
+        self._popup.open()
     def show_draw(self):
         self.status_msg.text = 'DRAW'
+        self.DrawAgain()
 
 class Board(GridLayout):
     def on_touch_down(self, touch):
