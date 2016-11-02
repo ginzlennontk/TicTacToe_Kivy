@@ -14,6 +14,7 @@ from kivy.properties import NumericProperty, StringProperty, ObjectProperty
 from kivy.uix.image import Image
 from kivy.graphics import Line, Color
 from kivy.graphics import *
+from kivy.core.window import Window
 
 class Tictactoe(AnchorLayout):
     table = [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']               # array for storage data
@@ -82,7 +83,9 @@ class StatusBar(BoxLayout):
     def Again(self):
         content = Again(No=self.dismiss_popup,Yes=self.countScore)
         self._popup = Popup(title='Play Again?', content=content, auto_dismiss=False, 
-                            size_hint=(None, None), size=(500,150))
+                            size_hint=(None, None), size=(500,150),
+                            pos_hint={'x': .2 , 
+                            'y':.0 })
         self._popup.open()
     def countScore(self):
         player = self.checkPlayer()
@@ -106,7 +109,8 @@ class StatusBar(BoxLayout):
     def DrawAgain(self):
         content = Again(No=self.dismiss_popup,Yes=self.reDraw)
         self._popup = Popup(title='Play Again?', content=content, auto_dismiss=False, 
-                            size_hint=(None, None), size=(500,150))
+                            size_hint=(None, None), size=(500,150),
+                            pos_hint={'x': .2 , 'y':.0})
         self._popup.open()
     def show_draw(self):
         self.status_msg.text = 'DRAW'
