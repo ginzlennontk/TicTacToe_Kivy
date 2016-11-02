@@ -155,6 +155,8 @@ class Option(BoxLayout):
         for mark in self.tictactoe.table:
             data += mark
         file.write(data)
+        file.write(str(self.status_bar.countX))
+        file.write(str(self.status_bar.countO))
         file.close()
         print("Save" + data)
         self.board.show_table()
@@ -177,11 +179,17 @@ class Option(BoxLayout):
         file = open("savedata.txt", "r")
         data = file.readline()
         self.status_bar.turn = 0
-        for i in range (0, 9):
+        for i in range (0, 11):
             if(data[i] in ('X', 'O')):
                 self.tictactoe.table[i] = data[i]
                 self.status_bar.turn +=1
-            else:
+            elif i == 9:
+                self.status_bar.countX = int(data[i])
+                print(data[i])
+            elif i == 10:
+                self.status_bar.countO = int(data[i])
+                print(data[i])
+            elif i < 10 and data[i] == ' ':
                 self.tictactoe.table[i] = ' '
         file.close()
         print("Load" + str(self.tictactoe.table))
